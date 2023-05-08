@@ -1,0 +1,224 @@
+CREATE TABLE Usuario (
+  idUsuario SERIAL PRIMARY KEY,
+  usuario VARCHAR(50) UNIQUE NOT NULL,
+  contrasena VARCHAR(50) NOT NULL,
+  tipoUsuario VARCHAR(1) NOT NULL
+);
+    
+CREATE TABLE Especialidad (
+  idEspecialidad SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE LugarMedico (
+  idLugarMedico SERIAL PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  localizacion VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Suministro (
+  idSuministro SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Inventario (
+  idInventario SERIAL PRIMARY KEY,
+  cantidad INTEGER NOT NULL,
+  expiracion DATE NOT null,
+  idLugarMedico INTEGER NOT NULL,
+  FOREIGN KEY(idLugarMedico) REFERENCES LugarMedico(idLugarMedico),
+  idSuministro INTEGER NOT NULL,
+  FOREIGN KEY(idSuministro) REFERENCES Suministro(idSuministro)
+);
+  
+CREATE TABLE Bodeguero (
+  idBodeguero SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  idUsuario INTEGER NOT NULL,
+  FOREIGN KEY(idUsuario) REFERENCES Usuario(idUsuario),
+  idLugarMedico INTEGER NOT NULL,
+  FOREIGN KEY(idLugarMedico) REFERENCES LugarMedico(idLugarMedico)
+);
+
+CREATE TABLE Medico (
+  idMedico SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  direccion VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20) NOT NULL,
+  numColegiado VARCHAR(50) NOT NULL,
+  idUsuario INTEGER NOT NULL,
+  FOREIGN KEY(idUsuario) REFERENCES Usuario(idUsuario),
+  idEspecialidad INTEGER NOT NULL,
+  FOREIGN KEY(idEspecialidad) REFERENCES Especialidad(idEspecialidad),
+  idLugarMedico INTEGER NOT NULL,
+  FOREIGN KEY(idLugarMedico) REFERENCES LugarMedico(idLugarMedico)
+ );
+
+CREATE TABLE Enfermedad (
+  idEnfermedad SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Paciente (
+  idPaciente SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  direccion VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20) NOT NULL,
+  masaCorporal INT NOT NULL,
+  altura INT NOT NULL,
+  adicciones TEXT 
+);
+
+CREATE TABLE HistorialMedico (
+  idHistorial SERIAL PRIMARY KEY,
+  fecha DATE NOT NULL,
+  herencias TEXT,
+  tratamiento INTEGER,
+  cantidadMedicamento INTEGER,
+  estado VARCHAR(20),
+  comentario TEXT,
+  idLugarMedico INTEGER NOT NULL,
+  FOREIGN KEY(idLugarMedico) REFERENCES LugarMedico(idLugarMedico),
+  idPaciente INTEGER NOT NULL,
+  FOREIGN KEY(idPaciente) REFERENCES Paciente(idPaciente),
+  idEnfermedad INTEGER NOT NULL,
+  FOREIGN KEY(idEnfermedad) REFERENCES Enfermedad(idEnfermedad),
+  idMedico INTEGER NOT NULL,
+  FOREIGN KEY(idMedico) REFERENCES Medico(idMedico)  
+);
+
+
+INSERT INTO Usuario (usuario, contrasena, tipoUsuario) 
+VALUES ('usuario1', 'contraseña1', '0'), 
+       ('usuario2', 'contraseña2', '1'), 
+       ('usuario3', 'contraseña3', '2');
+
+INSERT INTO Especialidad (nombre) 
+VALUES ('Cardiología'), 
+       ('Dermatología'), 
+       ('Neurología');
+
+INSERT INTO LugarMedico (nombre, localizacion) 
+VALUES ('Hospital General', 'Calle 123 #456'), 
+       ('Centro de Salud', 'Avenida 789 #012'), 
+       ('Clínica del Carmen', 'Calle 321 #654');
+
+      
+INSERT INTO Suministro (nombre) 
+VALUES ('Paracetamol'), 
+       ('Ibuprofeno'), 
+       ('Aspirina');
+      
+select * from inventario i ;
+       
+INSERT INTO Inventario (cantidad, expiracion, idLugarMedico, idSuministro) 
+VALUES (100, '2024-06-30', 1, 1), 
+       (15, '2023-12-31', 2, 2), 
+       (16, '2025-03-15', 3, 3);
+      
+INSERT INTO Bodeguero (nombre, idUsuario, idLugarMedico) 
+VALUES ('Juan Pérez', 3, 1);
+     
+INSERT INTO Medico (nombre, direccion, telefono, numColegiado, idUsuario, idEspecialidad, idLugarMedico) 
+VALUES ('Dr. Juan Sánchez', 'Calle 234 #567', '555-1234', '123456', 2, 1, 2);
+
+INSERT INTO Enfermedad (nombre) 
+VALUES ('Diabetes'), 
+       ('Hipertensión'), 
+       ('Cáncer');
+      
+INSERT INTO Paciente (nombre, direccion, telefono, masaCorporal, altura, adicciones) 
+VALUES ('Pedro Gómez', 'Calle 345 #678', '555-2345', 80, 175, 'Ninguna'), 
+       ('María López', 'Avenida 678 #901', '555-8901', 65, 160, 'Tabaco'), 
+       ('Juan Pérez', 'Calle 123 #456', '555-5678', 90, 180, 'Alcohol');
+      
+INSERT INTO HistorialMedico (fecha, herencias, tratamiento, cantidadMedicamento, estado, comentario, idLugarMedico, idPaciente, idEnfermedad, idMedico) VALUES
+('2022-01-10', 'Padre con diabetes', 1, 3, 'Estable', NULL, 2, 1, 1, 1),
+('2022-05-20', 'Madre con hipertensión', 2, 1, 'muerto', 'Cambio de medicamento', 2, 2, 2, 1),
+('2022-03-05', 'Ninguna', 3, 2, 'Excelente', NULL, 2, 3, 3, 1);
+
+INSERT INTO LugarMedico (nombre, localizacion) 
+VALUES ('Hospital General', 'Calle 123 #456'), 
+       ('Centro de Salud', 'Avenida 789 #012'), 
+       ('Clínica del Carmen', 'Calle 321 #654');
+      
+      
+     
+INSERT INTO Especialidad (nombre) 
+VALUES ('Cardiología'), 
+       ('Dermatología'), 
+       ('Neurología');
+      
+
+      
+CREATE TABLE Bitacora (
+	fechaMod TIMESTAMP,
+	usuario VARCHAR(30),
+	modificacion text,
+	anterior text,
+	nuevo text
+);
+drop table bitacora ;
+
+select * from bitacora b ;
+CREATE OR REPLACE FUNCTION registrar_bitacora()
+RETURNS TRIGGER AS
+$BODY$
+BEGIN
+	INSERT INTO Bitacora (fechaMod, usuario, modificacion,anterior,nuevo)
+	VALUES (now(), 'postgres', TG_OP, old, new);
+	RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Usuario
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Especialidad
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON LugarMedico
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Suministro
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Inventario
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Bodeguero
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Medico
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Enfermedad
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON Paciente
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
+CREATE TRIGGER bitacora
+AFTER INSERT OR UPDATE ON HistorialMedico
+FOR EACH ROW
+EXECUTE PROCEDURE registrar_bitacora();
+
